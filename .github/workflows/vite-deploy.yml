@@ -2,7 +2,7 @@ name: vite deploy
 
 on:
   push:
-    branches: ["master"]
+    branches: ["production"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -24,3 +24,5 @@ jobs:
       - name: Vite Github Pages Deployer
         uses: xinji31/vite-github-pages-deployer@v2
         id: deploy_to_pages
+        with:
+          public_base_path: "/"
