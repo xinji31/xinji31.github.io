@@ -1,5 +1,5 @@
 import { Database } from "../db"
-import { boxPromise } from "../lib/box"
+import { BoxComputed, boxPromise } from "../lib/box"
 import { element as e } from "../lib/element"
 import { linkTo } from "../lib/router"
 import { flatCss } from "../lib/util"
@@ -101,7 +101,7 @@ function articleElement(art) {
  * @returns 
  */
 export function articleList(db) {
-  return e("div").sub(boxPromise(
+  const articleItems = boxPromise(
     loading(),
     (async () => {
       const si = await db.siteInfo()
@@ -109,5 +109,16 @@ export function articleList(db) {
         ...si.previewList.map(id => articleElement(si.articles[id]))
       )
     })()
-  ))
+  )
+
+  return e("div").sub(new BoxComputed($ => {
+    const state = $(articleItems)
+    if (state.status === "rejected") {
+      return e("div").attr({
+        // TODO: fix error message css
+        class: "ui negative message",
+      }).sub(`加载文章列表失败: ${state.error?.message || state.error}`)
+    }
+    return state.value
+  }))
 }

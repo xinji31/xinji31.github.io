@@ -17,14 +17,15 @@ function addAttribute(element, key, value) {
 }
 
 /**
- * 
- * @param {HTMLElement} element 
+ * @param {HTMLElement} element
+ * @param {String} key
+ * @param {*} value
  */
 function removeAttribute(element, key, value) {
   if (value === null || value === undefined) {
     return
   } else if (typeof value === "function") {
-    element.removeEventListener(value)
+    element.removeEventListener(key, value)
   } else {
     element.removeAttribute(key)
   }
